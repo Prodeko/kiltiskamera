@@ -10,8 +10,8 @@ type ChatMessage = {
 };
 
 enum WsMessageType {
-  message = 'MESSAGE',
-  init_all = 'ALL',
+  MESSAGE = 'MESSAGE',
+  INIT_ALL = 'ALL',
 }
 
 const messages: ChatMessage[] = [];
@@ -31,7 +31,7 @@ const addNewMessage = (data: RawData) => {
 const handleConnect = (socket: WebSocket) => {
   const data = JSON.stringify(
     {
-      type: WsMessageType.init_all,
+      type: WsMessageType.INIT_ALL,
       data: messages,
     },
   );
@@ -42,7 +42,7 @@ const handleWsMessage = (data: RawData, clients: Set<WebSocket>) => {
   const msg = addNewMessage(data);
   clients.forEach((s) => {
     const msgData = JSON.stringify({
-      type: WsMessageType.message,
+      type: WsMessageType.MESSAGE,
       data: msg,
     });
     s.send(msgData);
