@@ -5,18 +5,19 @@ const wss = new WebSocketServer({
 });
 
 type ChatMessage = {
-  timestamp: Date,
+  timestamp: string,
   text: string
 };
 
 const messages: ChatMessage[] = [];
 
 const handleMessage = (data: RawData) => {
-  const { timestamp, text } = JSON.parse(data.toString());
-  if (!timestamp || !text) {
+  const { text } = JSON.parse(data.toString());
+  if (!text) {
     throw new Error('Invalid message');
   }
 
+  const timestamp = new Date().toJSON();
   const msg = { timestamp, text } as ChatMessage;
   messages.push(msg);
   return msg;
