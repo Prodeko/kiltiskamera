@@ -1,4 +1,4 @@
-import { RawData, WebSocketServer } from 'ws';
+import { RawData, WebSocketServer, WebSocket } from 'ws';
 
 const wss = new WebSocketServer({
   port: 8080,
@@ -8,6 +8,11 @@ type ChatMessage = {
   timestamp: string,
   text: string
 };
+
+enum WsMessageType {
+  message = 'MESSAGE',
+  init_all = 'ALL',
+}
 
 const messages: ChatMessage[] = [];
 
@@ -23,15 +28,29 @@ const handleMessage = (data: RawData) => {
   return msg;
 };
 
+const handleConnect = (socket: WebSocket) => {
+  const data = JSON.stringify(
+    {
+      type: WsMessageType.init_all,
+      data: messages,
+    },
+  );
+  socket.send(data);
+};
+
 const start = () => {
   wss.on('connection', (socket) => {
-    console.log('CONNECTED');
+    handleConnect(socket);
 
     socket.on('message', (data) => {
       try {
         const msg = handleMessage(data);
         wss.clients.forEach((s) => {
-          s.send(JSON.stringify(msg));
+          const msgData = JSON.stringify({
+            type: WsMessageType.message,
+            data: msg,
+          });
+          s.send(msgData);
         });
       } catch (err) {
         console.log('Invalid message:', err);
