@@ -9,6 +9,8 @@ type ChatMessage = {
   text: string
 };
 
+const messages: ChatMessage[] = [];
+
 const handleMessage = (data: RawData) => {
   const { timestamp, text } = JSON.parse(data.toString());
   if (!timestamp || !text) {
@@ -16,6 +18,7 @@ const handleMessage = (data: RawData) => {
   }
 
   const msg = { timestamp, text } as ChatMessage;
+  messages.push(msg);
   console.log('Received valid message', msg);
 };
 
