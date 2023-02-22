@@ -19,7 +19,7 @@ const handleMessage = (data: RawData) => {
 
   const msg = { timestamp, text } as ChatMessage;
   messages.push(msg);
-  console.log('Received valid message', msg);
+  return msg;
 };
 
 const start = () => {
@@ -28,7 +28,10 @@ const start = () => {
 
     socket.on('message', (data) => {
       try {
-        handleMessage(data);
+        const msg = handleMessage(data);
+        wss.clients.forEach((s) => {
+          s.send(JSON.stringify(msg));
+        });
       } catch (err) {
         console.log('Invalid message:', err);
       }
