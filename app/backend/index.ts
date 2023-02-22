@@ -5,27 +5,27 @@ const wss = new WebSocketServer({
   port: 8080,
 });
 
-const app = express()
-const port = 3000
+const app = express();
+const port = 3000;
 
 app.get('/', (req, res) => {
-  res.send('Hello Worlds!')
-})
+  res.send('Hello Worlds!');
+});
 
-app.listen()
+app.listen();
 
 const start = () => {
-    wss.on('connection', (socket) => {
-        console.log("CONNECTED");
+  wss.on('connection', (socket) => {
+    console.log('CONNECTED');
 
-        socket.on("message", (data) => {
-            console.log('received: %s', data);
-        })
+    socket.on('message', (data) => {
+      console.log('received: %s', data);
     });
+  });
 
-    app.listen(port, () => {
-        console.log(`Example app listening on port ${port}`)
-    })
-}
+  app.listen(port, () => {
+    console.log(`Example app listening on port ${port}`);
+  });
+};
 
 start();
