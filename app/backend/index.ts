@@ -16,7 +16,7 @@ enum WsMessageType {
 
 const messages: ChatMessage[] = [];
 
-const handleMessage = (data: RawData) => {
+const addNewMessage = (data: RawData) => {
   const { text } = JSON.parse(data.toString());
   if (!text) {
     throw new Error('Invalid message');
@@ -38,20 +38,24 @@ const handleConnect = (socket: WebSocket) => {
   socket.send(data);
 };
 
+const handleWsMessage = (data: RawData, clients: Set<WebSocket>) => {
+  const msg = addNewMessage(data);
+  clients.forEach((s) => {
+    const msgData = JSON.stringify({
+      type: WsMessageType.message,
+      data: msg,
+    });
+    s.send(msgData);
+  });
+};
+
 const start = () => {
   wss.on('connection', (socket) => {
     handleConnect(socket);
 
     socket.on('message', (data) => {
       try {
-        const msg = handleMessage(data);
-        wss.clients.forEach((s) => {
-          const msgData = JSON.stringify({
-            type: WsMessageType.message,
-            data: msg,
-          });
-          s.send(msgData);
-        });
+        handleWsMessage(data, wss.clients);
       } catch (err) {
         console.log('Invalid message:', err);
       }
