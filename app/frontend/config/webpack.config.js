@@ -339,6 +339,13 @@ module.exports = function (webpackEnv) {
     module: {
       strictExportPresence: true,
       rules: [
+        {
+          test: require.resolve('janus-gateway'),
+          loader: 'exports-loader',
+          options: {
+            exports: 'Janus',
+          },
+        },
         // Handle node_modules packages that contain sourcemaps
         shouldUseSourceMap && {
           enforce: 'pre',
@@ -563,6 +570,7 @@ module.exports = function (webpackEnv) {
       ].filter(Boolean),
     },
     plugins: [
+      new webpack.ProvidePlugin({ adapter: ['webrtc-adapter', 'default'] }),
       // Generates an `index.html` file with the <script> injected.
       new HtmlWebpackPlugin(
         Object.assign(
