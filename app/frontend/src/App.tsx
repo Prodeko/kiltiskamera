@@ -1,7 +1,9 @@
 import React from 'react'
 import Chat from './Chat'
+import janus from './janus'
 
 const App = () => {
+
   return(
     <div className='flex flex-col lg:grid lg:grid-cols-[5fr_2fr] lg:grid-rows-[1fr_auto_5fr] h-screen bg-violet-500'>
       <div className='bg-black aspect-video'>Video</div> {/*Video*/}
