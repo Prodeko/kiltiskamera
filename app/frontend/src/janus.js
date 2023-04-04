@@ -31,6 +31,7 @@ class JanusState {
 
   setStatus(val) {
     this.status = val
+    this.notifyStatusSubs(val)
   }
 
   setStreaming(val) {
@@ -43,6 +44,14 @@ class JanusState {
 
   startWithID(id) {
     this.videoID = id
+  }
+
+  subsribeToStatus(cb) {
+    this.statusSubs.push(cb)
+  }
+
+  notifyStatusSubs(status) {
+    this.statusSubs.forEach(cb => cb(status))
   }
 }
 
@@ -117,6 +126,7 @@ const handleMessage = (msg, jsep) => {
 }
 
 const handleTrack = (track, mid, on) => {
+  janusState.setStatus(on);
   const videoStream = new MediaStream([track]);
   if (!janusState.videoID) {
     console.log("ERROR: videoID missing. Forgot to call startWithID?")

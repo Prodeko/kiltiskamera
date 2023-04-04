@@ -1,13 +1,15 @@
-import React, { useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import Chat from './Chat'
 import { janusState } from './janus'
 
 const VIDEO_EL_ID = 'videoelement'
 
 const App = () => {
+  const [videoStatus, setVideoStatus] = useState<boolean>(false)
 
   useEffect(() => {
     janusState.startWithID(VIDEO_EL_ID)
+    janusState.subsribeToStatus((s: boolean) => setVideoStatus(s))
   }, [])
 
   return(
