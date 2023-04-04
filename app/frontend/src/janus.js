@@ -117,13 +117,13 @@ const handleMessage = (msg, jsep) => {
 }
 
 const handleTrack = (track, mid, on) => {
-const videoStream = new MediaStream([track]);
-if (!janusState.videoID) {
-  console.log("ERROR: videoID missing. Forgot to call startWithID?")
-  return
-}
-const el = document.getElementById(janusState.videoID)
-Janus.attachMediaStream(el, videoStream)
+  const videoStream = new MediaStream([track]);
+  if (!janusState.videoID) {
+    console.log("ERROR: videoID missing. Forgot to call startWithID?")
+    return
+  }
+  const el = document.getElementById(janusState.videoID)
+  Janus.attachMediaStream(el, videoStream)
 }
 
 export { Janus, janusState }
