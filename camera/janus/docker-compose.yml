@@ -3,12 +3,13 @@ services:
 
   #
   # janus-gateway
+  # handles the WebRTC routing
   #
   janus-gateway:
-    build: 
+    build:
       context: .
-    #command: ["/usr/local/bin/janus", "-F", "/usr/local/etc/janus"]
-    network_mode: "host"
+    command: ["/usr/local/bin/janus", "-F", "/usr/local/etc/janus"]
+    network_mode: "host" # needs linux platform
     
     volumes:
       - "./conf/janus.transport.http.jcfg:/usr/local/etc/janus/janus.transport.http.jcfg"  # open adminapi config
@@ -17,4 +18,6 @@ services:
       - "./conf/janus.plugin.streaming.jcfg:/usr/local/etc/janus/janus.plugin.streaming.jcfg"
     restart: always
 
+
+  # TODO: add ffmpeg command container
 
