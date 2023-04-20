@@ -1,5 +1,6 @@
 # This file comes from the git repository canyanio/janus-gateway-docker
 # Changes to that repository need to be added here if updgrades are needed.
+# Note the custom additions at the bottom of the file.
 
 FROM debian:bullseye-slim
 
@@ -122,5 +123,11 @@ EXPOSE 8889
 EXPOSE 8000
 EXPOSE 7088
 EXPOSE 7089
+
+# Custom commands:
+
+COPY conf/ /usr/local/etc/janus/
+
+# End custom commands
 
 CMD ["/usr/local/bin/janus"]
