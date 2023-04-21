@@ -1,6 +1,6 @@
 # This file comes from the git repository canyanio/janus-gateway-docker
 # Changes to that repository need to be added here if updgrades are needed.
-# Note the custom additions at the bottom of the file.
+# Note the custom additions in this file.
 
 FROM debian:bullseye-slim
 
@@ -52,7 +52,9 @@ RUN cd /tmp && \
 	make && \
 	make install
 
-COPY . /usr/local/src/janus-gateway
+# Use janus 1.1.3 version:
+RUN mkdir /usr/local/src/janus-gateway && cd /usr/local/src && \ 
+	git clone --depth 1 --branch v1.1.3 https://github.com/meetecho/janus-gateway.git
 
 RUN cd /usr/local/src/janus-gateway && \
 	sh autogen.sh && \
@@ -124,10 +126,7 @@ EXPOSE 8000
 EXPOSE 7088
 EXPOSE 7089
 
-# Custom commands:
-
+# Include the config files in the image to prevent having to use volumes on the camera side.
 COPY conf/ /usr/local/etc/janus/
-
-# End custom commands
 
 CMD ["/usr/local/bin/janus"]
