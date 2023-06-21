@@ -11,7 +11,6 @@ const VideoLoading = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setBgColor(bgColors[(bgColors.indexOf(bgColor) + 1) % bgColors.length])
-      console.log(bgColor)
     }, 1000)
     return () => clearInterval(interval)
   }, [bgColor])
