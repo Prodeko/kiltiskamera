@@ -45,6 +45,7 @@ const handleWsMessage = (data: RawData, clients: Set<WebSocket>) => {
       type: WsMessageType.MESSAGE,
       data: msg,
     });
+    console.log(`Received message: "${msg.text}"`);
     s.send(msgData);
   });
 };
