@@ -43,7 +43,7 @@ const handleWsMessage = (data: RawData, clients: Set<WebSocket>) => {
   clients.forEach((s) => {
     const msgData = JSON.stringify({
       type: WsMessageType.MESSAGE,
-      data: msg,
+      data: messages,
     });
     console.log(`Received message: "${msg.text}"`);
     s.send(msgData);
