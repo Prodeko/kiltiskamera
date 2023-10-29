@@ -2,17 +2,14 @@ version: '3.9'
 services:
 
   #
-  # janus-gateway
+  # mediamtx-gateway
   # handles the WebRTC routing
   #
-  janus-gateway:
-    build:
-      context: .
-    command: ["/usr/local/bin/janus", "-F", "/usr/local/etc/janus"]
+  mediamtx-gateway:
+    image: bluenviron/mediamtx:latest-ffmpeg
     network_mode: "host" # needs linux platform
-    
     restart: always
-
-
-  # TODO: add ffmpeg command container
-
+    volumes: 
+      - ./mediamtx.yml:/mediamtx.yml
+    devices:
+      - /dev/video0:/dev/video0
