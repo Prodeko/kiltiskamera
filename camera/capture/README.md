@@ -1,1 +1,0 @@
-Tähän tule ffmpeg kontti.
