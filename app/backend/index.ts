@@ -1,4 +1,17 @@
 import { RawData, WebSocketServer, WebSocket } from 'ws';
+import express, { Express, Request, Response } from 'express';
+
+const app: Express = express();
+const port = 8087;
+
+app.post('/authenticate', (req: Request, res: Response) => {
+  console.log("got auth req");
+  res.send(200);
+});
+
+app.listen(port, () => {
+  console.log(`⚡️[server]: Authentication server is running at http://localhost:${port}`);
+});
 
 const wss = new WebSocketServer({
   port: 8080,
