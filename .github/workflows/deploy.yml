@@ -5,6 +5,7 @@ on:
     branches:
       - nginx-gateway
       - main
+      - ci
 
 permissions:
   id-token: write
