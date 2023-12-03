@@ -9,6 +9,7 @@ on:
 
 permissions:
   id-token: write
+  contents: read
 
 env:
   AZURE_CORE_OUTPUT: none
