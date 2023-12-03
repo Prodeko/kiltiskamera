@@ -14,4 +14,4 @@ COPY . .
 RUN npm install
 
 # Starting our application
-CMD [ "node", "index.ts" ]
+CMD [ "npm", "run", "dev" ]
