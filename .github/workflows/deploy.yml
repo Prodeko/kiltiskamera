@@ -39,7 +39,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Log in to Azure
         uses: Azure/login@v1
         with:
@@ -48,7 +48,7 @@ jobs:
           allow-no-subscriptions: true
   
       - name: Deploy from ACR
-        uses: azure/webapps-deploy@v2
+        uses: azure/webapps-deploy@v3
         with:
           app-name: 'kiltiskamera'
           images: |
