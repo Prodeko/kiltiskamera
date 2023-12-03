@@ -3,35 +3,59 @@ name: Build and deploy
 on:
   push:
     branches:
-      - placeholder
-  workflow_dispatch:
+      - nginx-gateway
+      - main
+
+permissions:
+  id-token: write
+
+env:
+  AZURE_CORE_OUTPUT: none
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
-    environment:
-      name: 'Production'
-
     steps:
       - uses: actions/checkout@v2
 
-      - name: Login via Azure CLI
-        uses: azure/login@v1
+      - name: Log in to Azure
+        uses: Azure/login@v1
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          client-id: ${{ secrets.CLIENT_ID }}
+          tenant-id: ${{ secrets.TENANT_ID }}
+          allow-no-subscriptions: true
 
       - name: Docker login to ACR
-        uses: azure/docker-login@v1
-        with:
-          login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
-          username: ${{ secrets.REGISTRY_USERNAME }}
-          password: ${{ secrets.REGISTRY_PASSWORD }}
+        run: az acr login --name ${{ secrets.REGISTRY_NAME }}
 
-      - name: Build and push
+      - name: Build and push image
         run: |
-          docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/kiltiskamera/kamera
-          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/kiltiskamera/kamera
-    
+          docker build -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/kiltiskamera/auth:${{ github.sha }} ../app/backend
+          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/kiltiskamera/auth:${{ github.sha }}
+
+      - name: Azure logout
+        run: |
+          az logout
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v2
+      - name: Log in to Azure
+        uses: Azure/login@v1
+        with:
+          client-id: ${{ secrets.CLIENT_ID }}
+          tenant-id: ${{ secrets.TENANT_ID }}
+          allow-no-subscriptions: true
+  
+      - name: Deploy from ACR
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: 'kiltiskamera'
+          images: |
+            ${{ secrets.REGISTRY_LOGIN_SERVER }}/kiltiskamera/auth:${{ github.sha }}
+
       - name: Azure logout
         run: |
           az logout
