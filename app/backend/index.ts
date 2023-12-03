@@ -84,7 +84,7 @@ app.get('/stream_url', (req: Request, res: Response) => {
   var token = addOnlineToken(userId);
   
   console.log("got stream url name");
-  const m3u8_stream_source = "https://192.168.0.73/live/hls/"+token+"/stream.m3u8"
+  const m3u8_stream_source = "https://kiltiskamera.prodeko.org/live/hls/"+token+"/stream.m3u8"
 
   res.json({'url': m3u8_stream_source});
 });
