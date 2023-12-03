@@ -1,15 +1,46 @@
-version: '3.9'
-services:
+version: '3'
 
-  #
-  # mediamtx-gateway
-  # handles the WebRTC routing
-  #
-  mediamtx-gateway:
-    image: bluenviron/mediamtx:latest-ffmpeg
-    network_mode: "host" # needs linux platform
-    restart: always
-    volumes: 
-      - ./mediamtx.yml:/mediamtx.yml
+services:
+  # The ffmpeg container reads the USB webcam and makes HLS segment files of the read video
+  ffmpeg:
+    image: maxcanna/ffmpeg:latest
+    command: >
+       -i /dev/video0
+       -profile:v baseline -pix_fmt yuvj420p -level:v 4.1 -preset ultrafast
+       -c:v libx264
+       -x264-params keyint=20:min-keyint=20
+       -http_persistent 0
+       -g 20
+       -sc_threshold 0
+       -f hls
+       -b:v 1000k
+       -s 1920x1080
+       -r 20
+       -hls_init_time 0
+       -hls_time 1
+       -hls_segment_type fmp4
+       -hls_list_size 5
+       -hls_delete_threshold 1
+       -hls_flags delete_segments
+       /tmp/hls/stream.m3u8
+    volumes:
+      - /dev/shm/camera_stream:/tmp/hls # Shared volume (in RAM!) between ffmpeg and nginx
     devices:
       - /dev/video0:/dev/video0
+
+  # The nginx container serves the HLS segment files provided that authentication is successful
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - /dev/shm/camera_stream:/var/www/hls
+
+  # The caddy container is the HTTPS termination point and automatically rotates certificates
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile

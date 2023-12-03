@@ -1,0 +1,13 @@
+{
+    # Global options block. Entirely optional, https is on by default
+    # Optional email key for lets encrypt
+    email cto@prodeko.org
+    acme_ca https://acme.zerossl.com/v2/DV90
+}
+www.kiltiskamera.prodeko.org {
+    redir https://kiltiskamera.prodeko.org{uri} permanent
+}
+kiltiskamera.prodeko.org {
+    tls cto@prodeko.org
+    reverse_proxy nginx:4000
+}
