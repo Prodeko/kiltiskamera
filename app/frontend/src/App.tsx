@@ -13,7 +13,7 @@ const App = () => {
 
   useEffect(() => {
     const initializeHls = () => {
-      fetch('http://localhost:8087/stream_url') // Include http:// or https://
+      fetch('https://kiltiskamera.azurewebsites.net/stream_url') // Include http:// or https://
         .then((response) => response.json())
         .then((data) => {
           const { url } = data;
