@@ -21,20 +21,12 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Log in to Azure
-        uses: Azure/login@v1
+        uses: Azure/login@v1.4.4
         with:
           client-id: ${{ secrets.CLIENT_ID }}
           tenant-id: ${{ secrets.TENANT_ID }}
           subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
           # allow-no-subscriptions: true
-
-      - name: Show AZ account
-        run: az account show
-      
-      - name: Show AZ cloud
-        run: az cloud show
-
-
       - name: Docker login to ACR
         run: az acr login --name ${{ secrets.REGISTRY_NAME }}
 
