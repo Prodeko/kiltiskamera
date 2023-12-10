@@ -28,6 +28,13 @@ jobs:
           subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
           # allow-no-subscriptions: true
 
+      - name: Show AZ account
+        run: az account show
+      
+      - name: Show AZ cloud
+        run: az cloud show
+
+
       - name: Docker login to ACR
         run: az acr login --name ${{ secrets.REGISTRY_NAME }}
 
