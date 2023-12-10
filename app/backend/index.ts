@@ -233,13 +233,34 @@ enum WsMessageType {
   INIT_ALL = 'ALL',
 }
 
-const messages: ChatMessage[] = [];
+const MESSAGE_TIME_TO_LIVE = 1 * 60 * 1000; // 1 minute
+const MAX_MESSAGES = 50;
+
+let messages: ChatMessage[] = [];
 
 // TODO: save a name for each user
 // when the user connects.
 // Used for displaying the name in the chat
 const PLACEHOLDER_NAME = 'Aleks Hiiho';
 const getNameForUser = () => PLACEHOLDER_NAME;
+
+const sendToClients = (clients: Set<WebSocket>, data: string) => {
+  clients.forEach((s) => {
+    s.send(data);
+  });
+};
+
+const filterMessagesJob = (_messages: ChatMessage[], clients: Set<WebSocket>) => {
+  const threshold = Date.now() - MESSAGE_TIME_TO_LIVE;
+  messages = _messages.filter(
+    (m) => new Date(m.timestamp).getTime() > threshold,
+  ).slice(0, MAX_MESSAGES);
+  const msgData = JSON.stringify({
+    type: WsMessageType.MESSAGE,
+    data: messages,
+  });
+  sendToClients(clients, msgData);
+};
 
 const addNewMessage = (data: RawData) => {
   const { text } = JSON.parse(data.toString());
@@ -253,6 +274,7 @@ const addNewMessage = (data: RawData) => {
     text,
     sender: getNameForUser(),
   } as ChatMessage;
+
   messages.push(msg);
   return msg;
 };
@@ -266,15 +288,13 @@ const handleConnect = (socket: WebSocket) => {
 };
 
 const handleWsMessage = (data: RawData, clients: Set<WebSocket>) => {
-  const msg = addNewMessage(data);
-  clients.forEach((s) => {
-    const msgData = JSON.stringify({
-      type: WsMessageType.MESSAGE,
-      data: messages,
-    });
-    console.log(`Received message: "${msg.text}"`);
-    s.send(msgData);
+  addNewMessage(data);
+  const msgData = JSON.stringify({
+    type: WsMessageType.MESSAGE,
+    data: messages,
   });
+  sendToClients(clients, msgData);
+  setTimeout(() => filterMessagesJob(messages, clients), MESSAGE_TIME_TO_LIVE);
 };
 
 const start = () => {
