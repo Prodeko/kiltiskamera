@@ -7,9 +7,9 @@ on:
       - main
       - ci
 
-permissions:
-  id-token: write
-  contents: read
+# permissions:
+#   id-token: write
+#   contents: read
 
 env:
   AZURE_CORE_OUTPUT: none
