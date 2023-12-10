@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useRef } from "react";
 import Message from "./Message";
 
 export type ChatMessage = {
@@ -8,21 +8,6 @@ export type ChatMessage = {
 
 const MessageList = ({ messages }: { messages: ChatMessage[] }) => {
   const messagesContainerRef = useRef<HTMLDivElement | null>(null);
-
-  const scrollToBottom = () => {
-    if (messagesContainerRef.current) {
-      messagesContainerRef.current.scrollTo({
-        top: messagesContainerRef.current.scrollHeight,
-        behavior: "smooth",
-      });
-    }
-  };
-
-  useEffect(() => {
-    setTimeout(() => {
-      scrollToBottom();
-    }, 500);
-  }, []);
 
   return (
     <div
