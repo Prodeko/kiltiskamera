@@ -235,6 +235,12 @@ enum WsMessageType {
 
 const messages: ChatMessage[] = [];
 
+// TODO: save a name for each user
+// when the user connects.
+// Used for displaying the name in the chat
+const PLACEHOLDER_NAME = 'Aleks Hiiho';
+const getNameForUser = () => PLACEHOLDER_NAME;
+
 const addNewMessage = (data: RawData) => {
   const { text } = JSON.parse(data.toString());
   if (!text) {
@@ -242,7 +248,11 @@ const addNewMessage = (data: RawData) => {
   }
 
   const timestamp = new Date().toJSON();
-  const msg = { timestamp, text } as ChatMessage;
+  const msg = {
+    timestamp,
+    text,
+    sender: getNameForUser(),
+  } as ChatMessage;
   messages.push(msg);
   return msg;
 };
