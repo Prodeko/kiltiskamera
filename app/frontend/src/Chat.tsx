@@ -50,13 +50,35 @@ const Message = ({ message }: { message: ChatMessage }) => {
   );
 };
 
+const EmojiReactionForm = ({
+  onReactionSubmit,
+}: {
+  onReactionSubmit: (emoji: string) => void;
+}) => {
+  const REACTIONS = ["😎", "🐶", "🐔", "🍉", "😵‍💫", "😮‍💨"];
+
+  return (
+    <div className="flex flex-row mt-4 w-full justify-between">
+      {REACTIONS.map((emoji, index) => (
+        <button
+          key={index}
+          className="text-4xl cursor-pointer transition-all duration-200 transform hover:scale-150 active:opacity-50 active:scale-150"
+          onClick={() => onReactionSubmit(emoji)}
+        >
+          {emoji}
+        </button>
+      ))}
+    </div>
+  );
+};
+
 const Chat = () => {
   const [message, setMessage] = useState<string>("");
   const [messages, setMessages] = useState<ChatMessage[]>([]);
 
   const { sendJsonMessage, lastJsonMessage } = useWebSocket(WS_URL, {
     onOpen: () => {
-      console.log("Webasocket connected!");
+      console.log("Websocket connected!");
     },
     share: true,
   });
@@ -76,42 +98,23 @@ const Chat = () => {
     setMessage("");
   };
 
+  const handleReactionSubmit = (emoji: string) => {
+    sendJsonMessage({
+      text: emoji,
+    });
+  };
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     setMessage(event.target.value);
   };
 
   return (
-    <div className="bg-gray-800 h-full flex flex-col justify-between">
-      <div className="rounded-b-3xl bg-gray-700 p-4 h-full">
-        {messages.length === 0 ? (
-          <div className="flex flex-col justify-center items-center h-full">
-            <div className="text-4xl">😢</div>
-            <p className="font-bold text-gray-200">It's quite quiet here!</p>
-          </div>
-        ) : (
-          <>
-            {messages.map((msg) => (
-              <Message message={msg} />
-            ))}
-          </>
-        )}
-      </div>
-      <form className="flex p-4" onSubmit={onSubmit}>
-        <input
-          className="px-6 py-4 flex-grow bg-gray-800 text-gray-100 outline-none"
-          type="text"
-          placeholder="What do you want to say?"
-          onChange={handleChange}
-          value={message}
-        />
-        <button
-          className="bg-green-600 rounded-full p-5 text-gray-100"
-          type="submit"
-        >
-          <IoSend />
-        </button>
-      </form>
+    <div className="h-full w-full flex flex-col align-bottom justify-end pb-8 pr-8 pl-8 bg-gradient-to-l from-[rgba(0,0,0,0.7)] to-transparent">
+      {messages.map((msg) => (
+        <Message key={msg.timestamp} message={msg} />
+      ))}
+      <EmojiReactionForm onReactionSubmit={handleReactionSubmit} />
     </div>
   );
 };
