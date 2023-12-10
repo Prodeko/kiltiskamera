@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import useWebSocket from "react-use-websocket";
 import EmojiReactionForm from "./EmojiForm";
-import Message from "./Message";
+import MessageList, { ChatMessage } from "./MessageList";
 
 const WS_URL = "ws://localhost:8080";
 
@@ -9,11 +9,6 @@ enum WsMessageType {
   MESSAGE = "MESSAGE",
   INIT_ALL = "ALL",
 }
-
-type ChatMessage = {
-  timestamp: string;
-  text: string;
-};
 
 type WsMessage = {
   type: WsMessageType;
@@ -80,11 +75,11 @@ const Chat = () => {
   };
 
   return (
-    <div className="h-full w-full flex flex-col align-bottom justify-end pb-8 pr-8 pl-8 bg-gradient-to-l from-[rgba(0,0,0,0.7)] to-transparent">
-      {messages.map((msg) => (
-        <Message key={msg.timestamp} message={msg} />
-      ))}
-      <EmojiReactionForm onReactionSubmit={handleReactionSubmit} />
+    <div className="h-full w-full relative flex flex-col align-bottom justify-end pb-8 pr-8 pl-8 bg-gradient-to-l from-[rgba(0,0,0,0.7)] to-transparent">
+      <MessageList messages={messages} />
+      <div className="w-full absolute bottom-8 right-8">
+        <EmojiReactionForm onReactionSubmit={handleReactionSubmit} />
+      </div>
     </div>
   );
 };

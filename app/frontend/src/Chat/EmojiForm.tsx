@@ -6,7 +6,7 @@ const EmojiReactionForm = ({
   const REACTIONS = ["😎", "🐶", "🐔", "🍉", "😵‍💫", "😮‍💨"];
 
   return (
-    <div className="flex flex-row mt-4 w-full justify-between">
+    <div className="flex flex-row w-full justify-between z-2">
       {REACTIONS.map((emoji, index) => (
         <button
           key={index}
