@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { IoSend } from "react-icons/io5";
 import useWebSocket from "react-use-websocket";
+import EmojiReactionForm from "./EmojiForm";
+import Message from "./Message";
 
-const WS_URL = "ws://10.100.51.230:8080";
+const WS_URL = "ws://localhost:8080";
 
 enum WsMessageType {
   MESSAGE = "MESSAGE",
@@ -39,37 +40,6 @@ const isWsMessage = (
     return true;
   }
   return false;
-};
-
-const Message = ({ message }: { message: ChatMessage }) => {
-  return (
-    <div className="text-gray-300">
-      <p className="text-xs">{message.timestamp}</p>
-      <p className="mb-3">{message.text}</p>
-    </div>
-  );
-};
-
-const EmojiReactionForm = ({
-  onReactionSubmit,
-}: {
-  onReactionSubmit: (emoji: string) => void;
-}) => {
-  const REACTIONS = ["😎", "🐶", "🐔", "🍉", "😵‍💫", "😮‍💨"];
-
-  return (
-    <div className="flex flex-row mt-4 w-full justify-between">
-      {REACTIONS.map((emoji, index) => (
-        <button
-          key={index}
-          className="text-4xl cursor-pointer transition-all duration-200 transform hover:scale-150 active:opacity-50 active:scale-150"
-          onClick={() => onReactionSubmit(emoji)}
-        >
-          {emoji}
-        </button>
-      ))}
-    </div>
-  );
 };
 
 const Chat = () => {

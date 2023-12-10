@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import Chat from "./Chat";
+import Chat from "./Chat"
 import VideoLoading from "./VideoLoading";
 
 import Hls from "hls.js";
