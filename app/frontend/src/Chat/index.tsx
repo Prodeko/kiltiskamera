@@ -38,7 +38,6 @@ const isWsMessage = (
 };
 
 const Chat = () => {
-  const [message, setMessage] = useState<string>("");
   const [messages, setMessages] = useState<ChatMessage[]>([]);
 
   const { sendJsonMessage, lastJsonMessage } = useWebSocket(WS_URL, {
@@ -51,27 +50,13 @@ const Chat = () => {
   useEffect(() => {
     if (lastJsonMessage !== null && isWsMessage(lastJsonMessage)) {
       setMessages(lastJsonMessage.data);
-      console.log("Current messages:", messages);
     }
   }, [lastJsonMessage, setMessages, messages]);
-
-  const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    sendJsonMessage({
-      text: message,
-    });
-    setMessage("");
-  };
 
   const handleReactionSubmit = (emoji: string) => {
     sendJsonMessage({
       text: emoji,
     });
-  };
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    event.preventDefault();
-    setMessage(event.target.value);
   };
 
   return (
