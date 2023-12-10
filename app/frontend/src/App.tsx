@@ -45,10 +45,10 @@ const App = () => {
   }, []); // Empty dependency array to run the effect only once
 
   return (
-    <div className="flex flex-col lg:grid lg:grid-cols-[5fr_2fr] lg:grid-rows-[1fr_auto_5fr] h-screen bg-violet-500">
-      <div className="aspect-video">
+    <div className="flex flex-col w-screen h-screen bg-black relative">
+      <div className="aspect-video max-w-screen max-h-screen">
         <video
-          className={`bg-black aspect-video ${videoStatus ? "" : "h-0 w-0"}`}
+          className={`aspect-video bg-black ${videoStatus ? "" : "h-0 w-0"}`}
           ref={videoEl}
           muted
           autoPlay
@@ -57,11 +57,7 @@ const App = () => {
         ></video>
         {!videoStatus && <VideoLoading />}
       </div>
-      <div className="lg:row-start-3 bg-blue-200 flex-shrink lg:h-full lg:flex-shrink-0">
-        Reaktiot: Bilis, Kahvi, Otter, teekuppi
-      </div>{" "}
-      {/*Reactions*/}
-      <div className="flex-grow lg:col-start-2 lg:col-end-3 lg:row-span-full">
+      <div className="absolute top-0 right-0 h-full">
         <Chat />
       </div>
     </div>
