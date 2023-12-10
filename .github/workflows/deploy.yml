@@ -52,8 +52,8 @@ jobs:
       - name: Deploy from ACR
         uses: azure/webapps-deploy@v3
         with:
-          publish-profile: ${{ secrets.PUBLISH_PROFILE }}
-          #app-name: 'kiltiskamera'
+          #publish-profile: ${{ secrets.PUBLISH_PROFILE }}
+          app-name: kiltiskamera
           images: |
             ${{ secrets.REGISTRY_LOGIN_SERVER }}/kiltiskamera/auth:${{ github.sha }}         
 
