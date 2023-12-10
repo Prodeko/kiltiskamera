@@ -1,10 +1,5 @@
 import React, { useRef } from "react";
-import Message from "./Message";
-
-export type ChatMessage = {
-  timestamp: string;
-  text: string;
-};
+import Message, { ChatMessage } from "./Message";
 
 const MessageList = ({ messages }: { messages: ChatMessage[] }) => {
   const messagesContainerRef = useRef<HTMLDivElement | null>(null);
