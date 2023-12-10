@@ -37,9 +37,8 @@ jobs:
         uses: azure/webapps-deploy@v2
         with:
           #publish-profile: ${{ secrets.PUBLISH_PROFILE }}
-          app-name: kiltiskamera
-          images: |
-            ${{ secrets.REGISTRY_LOGIN_SERVER }}/kiltiskamera/auth:${{ github.sha }}         
+          app-name: 'kiltiskamera'
+          images: ${{ secrets.REGISTRY_LOGIN_SERVER }}/kiltiskamera/auth:${{ github.sha }}         
 
       - name: Azure logout
         run: |
