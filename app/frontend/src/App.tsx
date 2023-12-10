@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import Chat from "./Chat"
+import Chat from "./Chat";
 import VideoLoading from "./VideoLoading";
 
 import Hls from "hls.js";
@@ -57,7 +57,7 @@ const App = () => {
         ></video>
         {!videoStatus && <VideoLoading />}
       </div>
-      <div className="absolute top-0 right-0 h-full">
+      <div className="absolute top-0 right-0 h-full w-[25%] min-w-[280px]">
         <Chat />
       </div>
     </div>
