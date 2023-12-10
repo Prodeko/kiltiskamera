@@ -46,7 +46,7 @@ const App = () => {
 
   return (
     <div className="flex flex-col w-screen h-screen bg-black relative">
-      <div className="aspect-video max-w-screen max-h-screen">
+      <div className="aspect-video overflow-hidden max-w-screen max-h-screen">
         <video
           className={`aspect-video bg-black ${videoStatus ? "" : "h-0 w-0"}`}
           ref={videoEl}
