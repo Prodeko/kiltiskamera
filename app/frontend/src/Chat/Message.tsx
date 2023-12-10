@@ -1,6 +1,6 @@
 import { animated, useSpring } from "@react-spring/web";
 
-type ChatMessage = {
+export type ChatMessage = {
   timestamp: string;
   text: string;
 };

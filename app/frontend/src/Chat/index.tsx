@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import useWebSocket from "react-use-websocket";
 import EmojiReactionForm from "./EmojiForm";
-import MessageList, { ChatMessage } from "./MessageList";
+import MessageList from "./MessageList";
+import { ChatMessage } from "./Message";
 
 const WS_URL = "ws://localhost:8080";
 
