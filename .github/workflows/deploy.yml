@@ -20,13 +20,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Log in to Azure
-        uses: Azure/login@v1.4.6
+      - uses: Azure/login@v1
         with:
-          client-id: ${{ secrets.CLIENT_ID }}
-          tenant-id: ${{ secrets.TENANT_ID }}
-          subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
-          # allow-no-subscriptions: true
+          creds: '{"clientId":"${{ secrets.CLIENT_ID }}","clientSecret":"${{ secrets.CLIENT_SECRET }}","subscriptionId":"${{ secrets.SUBSCRIPTION_ID }}","tenantId":"${{ secrets.TENANT_ID }}"}'
+
       - name: Docker login to ACR
         run: az acr login --name ${{ secrets.REGISTRY_NAME }}
 
