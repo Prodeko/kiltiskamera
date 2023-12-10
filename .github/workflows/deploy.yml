@@ -50,7 +50,7 @@ jobs:
           # allow-no-subscriptions: true
   
       - name: Deploy from ACR
-        uses: azure/webapps-deploy@v2
+        uses: azure/webapps-deploy@v2.2.0
         with:
           #publish-profile: ${{ secrets.PUBLISH_PROFILE }}
           app-name: kiltiskamera
