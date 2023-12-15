@@ -6,7 +6,14 @@ import cookieParser from "cookie-parser";
 import request from "request";
 import { NextFunction, Request, Response } from "express";
 import { ProdekoUser } from "./tokens";
-
+import {
+  OAUTH2_AUTH_URL,
+  OAUTH2_CALLBACK_URL,
+  OAUTH2_CLIENT_ID,
+  OAUTH2_CLIENT_SECRET,
+  OAUTH2_TOKEN_URL,
+  OAUTH2_PROFILE_URL,
+} from "./configuration";
 // Define a custom session interface that extends SessionData
 declare module "express-session" {
   interface SessionData {
@@ -29,12 +36,11 @@ passport.deserializeUser((user: ProdekoUser, done) => {
 passport.use(
   new OAuth2Strategy(
     {
-      authorizationURL: "http://localhost:8000/oauth2/auth",
-      tokenURL: "http://localhost:8000/oauth2/token",
-      clientID: "g3e8ssUHI0QKZeyJF0dkIDeKfUWcoNEBtzU10C1Q",
-      clientSecret:
-        "Q5pMhYXRfcqfFJwmfkpOY4qBvojSBir3wUrPb5829PNwaJ1jP72oFyGYNu2CPEkz0ATU50vxWTTuUHQfs2fHAFAVnGjqWshBrTpPSqVPfz7tBkXSNu2nXR5cZ8gftN9N",
-      callbackURL: "http://localhost:8087/auth/prodeko/callback",
+      authorizationURL: OAUTH2_AUTH_URL,
+      tokenURL: OAUTH2_TOKEN_URL,
+      clientID: OAUTH2_CLIENT_ID,
+      clientSecret: OAUTH2_CLIENT_SECRET,
+      callbackURL: OAUTH2_CALLBACK_URL,
       // eslint-disable-next-line @typescript-eslint/ban-types
     },
     (
@@ -51,7 +57,7 @@ passport.use(
       // Get user details
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const userResponse = request(
-        "http://localhost:8000/oauth2/user_details/",
+        OAUTH2_PROFILE_URL,
         {
           method: "GET",
           headers,

@@ -16,7 +16,7 @@ import {
   addOnlineToken,
   getOnlineTokens,
 } from "./tokens";
-import { PORT } from "./configuration";
+import { PORT, SESSION_SECRET } from "./configuration";
 
 // Setup express app and middlewares
 const app: Express = express();
@@ -24,7 +24,7 @@ app.use(express.json());
 
 app.use(cookieParser());
 const sessionParser = session({
-  secret: "YOUR_SESSION_SECRET",
+  secret: SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
 });
