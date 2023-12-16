@@ -30,15 +30,15 @@ jobs:
 
       - name: Build and push image
         run: |
-          docker build -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/kiltiskamera/auth:${{ github.sha }} app/backend
-          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/kiltiskamera/auth:${{ github.sha }}
+          docker build -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/kiltiskamera/backend:${{ github.sha }} app
+          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/kiltiskamera/backend:${{ github.sha }}
 
       - name: Deploy from ACR
         uses: azure/webapps-deploy@v2
         with:
           #publish-profile: ${{ secrets.PUBLISH_PROFILE }}
           app-name: 'kiltiskamera'
-          images: ${{ secrets.REGISTRY_LOGIN_SERVER }}/kiltiskamera/auth:${{ github.sha }}         
+          images: ${{ secrets.REGISTRY_LOGIN_SERVER }}/kiltiskamera/backend:${{ github.sha }}  
 
       - name: Azure logout
         run: |
