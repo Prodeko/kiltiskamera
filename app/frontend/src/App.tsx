@@ -62,6 +62,7 @@ const App = () => {
           ref={videoEl}
           muted
           autoPlay
+          playsInline
           onPlay={() => setVideoStatus(true)}
           onPause={() => console.log("Teremos")}
         ></video>
