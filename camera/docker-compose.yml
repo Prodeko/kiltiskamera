@@ -27,6 +27,7 @@ services:
       - /dev/shm/camera_stream:/tmp/hls # Shared volume (in RAM!) between ffmpeg and nginx
     devices:
       - /dev/video0:/dev/video0
+    restart: always
 
   # The nginx container serves the HLS segment files provided that authentication is successful
   nginx:
@@ -34,11 +35,12 @@ services:
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
       - /dev/shm/camera_stream:/var/www/hls
+    restart: always
 
   # The caddy container is the HTTPS termination point and automatically rotates certificates
   caddy:
     image: caddy:2-alpine
-    restart: unless-stopped
+    restart: always
     ports:
       - "80:80"
       - "443:443"
