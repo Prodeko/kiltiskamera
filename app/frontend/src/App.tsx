@@ -7,7 +7,6 @@ import Hls from "hls.js";
 const App = () => {
   const [hls, setHls] = useState<Hls | null>(null);
   const [videoStatus, setVideoStatus] = useState<boolean>(false);
-  const [m3u8StreamSource, setM3u8StreamSource] = useState("");
 
   const videoEl = useRef<HTMLVideoElement | null>(null);
 
@@ -19,18 +18,29 @@ const App = () => {
           const { url } = data;
 
           if (videoEl.current) {
-            newHls.attachMedia(videoEl.current);
-            newHls.on(Hls.Events.MEDIA_ATTACHED, () => {
-              newHls.loadSource(url);
-            });
+            const videoCurrent = videoEl.current;
+            if (videoCurrent.canPlayType("application/vnd.apple.mpegurl")) {
+              // HLS is natively supported in Safari
+              videoCurrent.src = url;
+              videoCurrent.addEventListener("loadedmetadata", function () {
+                videoCurrent.play();
+              });
+            } else if (Hls.isSupported()) {
+              // For other browsers, use Hls.js
+              const newHls = new Hls({ liveDurationInfinity: true });
+              newHls.attachMedia(videoCurrent);
+              newHls.on(Hls.Events.MEDIA_ATTACHED, () => {
+                newHls.loadSource(url);
+              });
+              setHls(newHls);
+            } else {
+              console.error("HLS not supported on this browser");
+            }
           }
         })
         .catch((error) => {
           console.error("Error fetching stream URL:", error);
         });
-
-      const newHls = new Hls({ debug: true, liveDurationInfinity: true });
-      setHls(newHls);
     };
 
     initializeHls();
