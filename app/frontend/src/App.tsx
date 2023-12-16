@@ -29,7 +29,7 @@ const App = () => {
           console.error("Error fetching stream URL:", error);
         });
 
-      const newHls = new Hls({ debug: true });
+      const newHls = new Hls({ debug: true, liveDurationInfinity: true });
       setHls(newHls);
     };
 
