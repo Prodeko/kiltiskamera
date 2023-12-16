@@ -1,9 +1,7 @@
 // auth.ts
-import passport from "passport";
-import OAuth2Strategy from "passport-oauth2";
-import session from "express-session";
-import cookieParser from "cookie-parser";
-import request from "request";
+import * as passport from "passport";
+import * as OAuth2Strategy from "passport-oauth2";
+import * as request from "request";
 import { NextFunction, Request, Response } from "express";
 import { ProdekoUser } from "./tokens";
 import {

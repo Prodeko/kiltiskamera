@@ -1,13 +1,11 @@
-import { RawData, WebSocketServer, WebSocket } from "ws";
-import express, { Express, NextFunction, Request, Response } from "express";
-import crypto from "crypto";
-import passport from "passport";
-import OAuth2Strategy from "passport-oauth2";
-import path from "path";
-import session from "express-session";
-import cookieParser from "cookie-parser";
-import request from "request";
-import http from "http";
+import { WebSocket } from "ws";
+import * as express from "express";
+import { Express, Request, Response } from "express";
+import * as passport from "passport";
+import * as path from "path";
+import * as session from "express-session";
+import * as cookieParser from "cookie-parser";
+import * as http from "http";
 import { ensureAuthenticated } from "./auth";
 import { handleConnect, handleWsMessage } from "./websocket";
 import {

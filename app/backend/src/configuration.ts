@@ -1,4 +1,4 @@
-import dotenv from "dotenv";
+import * as dotenv from "dotenv";
 dotenv.config(); // Load environment variables from .env file
 
 export const PORT = 8087;

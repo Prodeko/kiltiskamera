@@ -1,4 +1,4 @@
-import crypto from "crypto";
+import * as crypto from "crypto";
 import { VIEWER_TOKEN_VALIDITY_TTL } from "./configuration";
 interface TokenInfo {
   id: string;
