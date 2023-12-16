@@ -50,6 +50,7 @@ WORKDIR /app/backend
 
 # Installing only production dependencies
 RUN npm install
+RUN npm run build
 
 # Starting our application
-CMD [ "npm", "run", "dev" ]
+CMD [ "npm", "run", "start" ]
