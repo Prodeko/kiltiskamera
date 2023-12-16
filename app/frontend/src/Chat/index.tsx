@@ -4,7 +4,7 @@ import EmojiReactionForm from "./EmojiForm";
 import MessageList from "./MessageList";
 import { ChatMessage } from "./Message";
 
-const WS_URL = "ws://kiltiskamera.azurewebsites.net";
+const WS_URL = "wss://kiltiskamera.azurewebsites.net";
 
 enum WsMessageType {
   MESSAGE = "MESSAGE",
