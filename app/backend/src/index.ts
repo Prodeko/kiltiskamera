@@ -55,12 +55,6 @@ app.get("/login", (req, res) => {
   `);
 });
 
-// All frontend routes
-app.use(
-  ensureAuthenticated,
-  express.static(path.join(__dirname, "../../frontend/build"))
-);
-
 // Stream publisher routes
 app.get("/authenticate", (req: Request, res: Response) => {
   // This endpoint will be called from nginx auth_request module
@@ -82,6 +76,12 @@ app.get("/authenticate", (req: Request, res: Response) => {
     }
   }
 });
+
+// All frontend routes
+app.use(
+  ensureAuthenticated,
+  express.static(path.join(__dirname, "../../frontend/build"))
+);
 
 // Web app routes
 app.get("/stream_url", ensureAuthenticated, (req: Request, res: Response) => {
