@@ -6,6 +6,7 @@ services:
     image: maxcanna/ffmpeg:latest
     command: >
        -i /dev/video0
+       -vf "vflip,hflip"
        -profile:v baseline -pix_fmt yuvj420p -level:v 4.1 -preset ultrafast
        -c:v libx264
        -x264-params keyint=20:min-keyint=20
