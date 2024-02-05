@@ -1,4 +1,4 @@
-version: '3'
+version: 3
 
 services:
   # The ffmpeg container reads the USB webcam and makes HLS segment files of the read video
@@ -11,12 +11,12 @@ services:
        -c:v libx264
        -x264-params keyint=20:min-keyint=20
        -http_persistent 0
-       -g 20
+       -g 10
        -sc_threshold 0
        -f hls
-       -b:v 1000k
+       -b:v 2000k
        -s 1920x1080
-       -r 20
+       -r 30
        -hls_init_time 0
        -hls_time 1
        -hls_segment_type fmp4
