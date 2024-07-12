@@ -5,12 +5,13 @@ import VideoLoading from "./VideoLoading";
 import Hls from "hls.js";
 
 const App = () => {
-  const [hls, setHls] = useState<Hls | null>(null);
   const [videoStatus, setVideoStatus] = useState<boolean>(false);
 
   const videoEl = useRef<HTMLVideoElement | null>(null);
 
   useEffect(() => {
+    let newHls: Hls;
+
     const initializeHls = () => {
       fetch("https://kiltiskamera.prodeko.org/stream_url") // Include http:// or https://
         .then((response) => response.json())
@@ -30,12 +31,11 @@ const App = () => {
               });
             } else if (Hls.isSupported()) {
               // For other browsers, use Hls.js
-              const newHls = new Hls({ liveDurationInfinity: true });
+              newHls = new Hls({ liveDurationInfinity: true });
               newHls.attachMedia(videoCurrent);
               newHls.on(Hls.Events.MEDIA_ATTACHED, () => {
                 newHls.loadSource(url);
               });
-              setHls(newHls);
             } else {
               console.error("HLS not supported on this browser");
             }
@@ -50,12 +50,11 @@ const App = () => {
 
     // Cleanup function
     return () => {
-      if (hls) {
-        hls.destroy();
-        setHls(null); // Set the state to null on cleanup
+      if (newHls) {
+        newHls.destroy();
       }
     };
-  }, []); // Empty dependency array to run the effect only once
+  }, [videoEl]);
 
   return (
     <div className="flex flex-col w-screen h-screen bg-black relative">
