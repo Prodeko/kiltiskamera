@@ -1,109 +1,58 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import Chat from './Chat'
 import VideoLoading from './VideoLoading'
-
-import Hls from 'hls.js'
-
-type VideoInitResult = (() => unknown) | void
+import VideoJS from './VideoJs'
+import { Player } from 'video.js'
 
 const App = () => {
   const [videoStatus, setVideoStatus] = useState<boolean>(false)
+  const [streamUrl, setStreamUrl] = useState<string | null>(null)
 
-  const videoEl = useRef<HTMLVideoElement | null>(null)
+  const videoJsOptions = {
+    autoplay: true,
+    controls: true,
+    responsive: true,
+    fluid: true,
+    muted: true,
+    liveui: true,
+    sources: [
+      {
+        src: streamUrl,
+        type: 'application/x-mpegURL',
+      },
+    ],
+  }
 
-  const initNativeHlsVideo = async (
-    video: HTMLVideoElement,
-    url: string
-  ): Promise<VideoInitResult> => {
-    return new Promise(async (res, rej) => {
-      video.onerror = rej
+  const handlePlayerReady = (player: Player) => {
+    // You can handle player events here, for example:
+    player.on('ready', () => {
+      setVideoStatus(true)
+    })
 
-      // We'll be optimistic and try to play even if the canPlayType result is "maybe"
-      if (Boolean(video.canPlayType("application/x-mpegURL codec=' '"))) {
-        video.src = url
-        try {
-          console.log('Trying to play HLS video natively')
-          await video.play()
-          res()
-        } catch (e) {
-          console.warn('Tried to play native HLS video but failed')
-          rej(e)
-        }
-      } else {
-        console.warn("Can't play HLS video natively")
-        rej(new Error("Browser doesn't support native HLS video"))
-      }
+    player.on('dispose', () => {
+      setVideoStatus(false)
     })
   }
 
-  const initMseHslVideo = async (
-    video: HTMLVideoElement,
-    url: string
-  ): Promise<VideoInitResult> => {
-    // For other browsers, use Hls.js
-    return new Promise((res, rej) => {
-      if (Hls.isSupported()) {
-        video.onerror = rej
+  const fetchStreamUrl = useCallback(() => {
+    fetch('https://kiltiskamera.prodeko.org/stream_url') // Include http:// or https://
+      .then((response) => response.json())
+      .then(async ({ url }) => {
+        setStreamUrl(url)
+      })
+      .catch((error) => {
+        console.error('Error fetching stream URL:', error)
+        console.log('Retrying...')
+        setTimeout(fetchStreamUrl, 1000)
+      })
+  }, [])
 
-        console.log('Trying to play HLS video via Hls.js')
-        const newHls = new Hls({ liveDurationInfinity: true })
-        try {
-          newHls.attachMedia(video)
-          newHls.on(Hls.Events.MEDIA_ATTACHED, () => {
-            newHls.loadSource(url)
-          })
+  useEffect(fetchStreamUrl, [fetchStreamUrl])
 
-          // Return teardown function
-          res(() => newHls.destroy())
-        } catch (e) {
-          rej(e)
-        }
-      } else {
-        rej(new Error('HLS video is not supported via Hls.js'))
-      }
-    })
-  }
-
-  useEffect(() => {
-    let videoInitResult: VideoInitResult
-
-    const initializeHls = () => {
-      fetch('https://kiltiskamera.prodeko.org/stream_url') // Include http:// or https://
-        .then((response) => response.json())
-        .then(async ({ url }) => {
-          const videoCurrent = videoEl.current
-          if (!videoCurrent) {
-            throw new Error('Video element not found')
-          }
-
-          videoInitResult = await initNativeHlsVideo(videoCurrent, url)
-            .catch(() => initMseHslVideo(videoCurrent, url))
-            .catch((e) => console.error(e))
-        })
-        .catch((error) => {
-          console.error('Error fetching stream URL:', error)
-        })
-    }
-
-    initializeHls()
-
-    // Cleanup function
-    return () => {
-      videoInitResult?.()
-    }
-  }, [videoEl])
   return (
     <div className="flex flex-col w-screen h-screen bg-black relative">
       <div className="aspect-video overflow-hidden max-w-screen max-h-screen">
-        <video
-          className={`aspect-video bg-black ${videoStatus ? '' : 'h-0 w-0'}`}
-          ref={videoEl}
-          muted
-          autoPlay
-          playsInline
-          onPlay={() => setVideoStatus(true)}
-          onPause={() => console.log('Teremos')}
-        ></video>
+        <VideoJS options={videoJsOptions} onReady={handlePlayerReady} />
         {!videoStatus && <VideoLoading />}
       </div>
       <div className="absolute top-0 right-0 h-full w-[25%] min-w-[280px]">
