@@ -31,9 +31,8 @@ jobs:
       - name: Docker login to ACR
         run: az acr login --name ${{ secrets.REGISTRY_NAME }}
 
-      - name: Build and push
-        run: |
-          docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/kiltiskamera/kamera
+      - name: Set up Docker buildx
+        uses: docker/setup-buildx-action@v3
 
       - name: Build and push image
         uses: docker/build-push-action@v5
