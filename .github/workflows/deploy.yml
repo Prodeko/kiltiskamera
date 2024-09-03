@@ -43,6 +43,8 @@ jobs:
           tags: ${{ secrets.REGISTRY_NAME }}.azurecr.io/kiltiskamera/kamera:${{ github.sha }}
           cache-from: type=gha,ref=${{ github.ref_name }}
           cache-to: type=gha,mode=max
+          allow: |
+            network.host
           network: host
 
       - name: Azure logout
