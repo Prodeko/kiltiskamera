@@ -28,6 +28,8 @@ const App = () => {
             ) {
               // HLS is natively supported in Safari
               videoCurrent.src = url
+              videoCurrent.defaultMuted = true
+              videoCurrent.muted = true
               videoCurrent.addEventListener('loadedmetadata', function () {
                 videoCurrent.play()
               })
