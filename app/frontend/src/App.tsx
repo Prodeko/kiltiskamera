@@ -28,9 +28,10 @@ const App = () => {
             ) {
               // HLS is natively supported in Safari
               videoCurrent.src = url
-              videoCurrent.addEventListener('loadedmetadata', function () {
-                videoCurrent.play()
-              })
+              // see if autoplay works
+              // videoCurrent.addEventListener('loadedmetadata', function () {
+              //   videoCurrent.play()
+              // })
             } else if (Hls.isSupported()) {
               // For other browsers, use Hls.js
               newHls = new Hls({ liveDurationInfinity: true })
