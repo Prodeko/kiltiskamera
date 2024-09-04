@@ -39,7 +39,7 @@ jobs:
         with:
           context: app
           push: true
-          tags: ${{ secrets.REGISTRY_NAME }}.azurecr.io/kiltiskamera/kamera:${{ github.sha }}
+          tags: ${{ secrets.REGISTRY_NAME }}.azurecr.io/kiltiskamera/backend:${{ github.sha }}
           cache-from: type=gha,ref=${{ github.ref_name }}
           cache-to: type=gha,mode=max
           allow: |
@@ -70,7 +70,7 @@ jobs:
       - name: Deploy from ACR
         run: |
           az webapp config container set \
-            --container-image-name ${{ secrets.REGISTRY_NAME }}.azurecr.io/kiltiskamera/kamera:${{ github.sha }} \
+            --container-image-name ${{ secrets.REGISTRY_NAME }}.azurecr.io/kiltiskamera/backend:${{ github.sha }} \
             --container-registry-url https://${{ secrets.REGISTRY_NAME }}.azurecr.io \
             --subscription ${{ secrets.SUBSCRIPTION }} \
             --resource-group kiltiskamera_group \
