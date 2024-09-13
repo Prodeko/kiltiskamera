@@ -1,20 +1,25 @@
-import { WebSocket } from "ws";
-import * as express from "express";
+import express = require("express");
 import { Express, Request, Response } from "express";
-import * as passport from "passport";
-import * as path from "path";
-import * as session from "express-session";
-import * as cookieParser from "cookie-parser";
-import * as http from "http";
+import http = require("http");
+import WebSocket = require("ws");
+import passport = require("passport");
+import path = require("path");
+import session = require("express-session");
+import cookieParser = require("cookie-parser");
 import { ensureAuthenticated } from "./auth";
 import { handleConnect, handleWsMessage } from "./websocket";
 import {
   isTokenOnline,
   ProdekoUser,
   addOnlineToken,
+  removeOnlineToken,
   getOnlineTokens,
 } from "./tokens";
-import { PORT, SESSION_SECRET } from "./configuration";
+import {
+  PORT,
+  SESSION_SECRET,
+  VIEWER_TOKEN_DESTROY_DELAY,
+} from "./configuration";
 
 // Setup express app and middlewares
 const app: Express = express();
@@ -115,6 +120,7 @@ const ws_server = new WebSocket.Server({
 
 // Web socket handlers
 ws_server.on("connection", function (socket: any, wsUser: ProdekoUser) {
+  socket.on("error", console.error);
   console.log(`Client ${wsUser.displayName} connected to the WebSocket`);
   handleConnect(socket);
 
@@ -126,8 +132,13 @@ ws_server.on("connection", function (socket: any, wsUser: ProdekoUser) {
     }
   });
 
-  socket.on("disconnect", () => {
-    console.log("Client disconnected");
+  socket.on("close", () => {
+    console.log(`Client ${wsUser.displayName} disconnected`);
+    // Next we remove the viewing token
+    // Essentially, it only allows watching happen traceably
+    setTimeout(() => {
+      removeOnlineToken(wsUser);
+    }, VIEWER_TOKEN_DESTROY_DELAY);
   });
 });
 

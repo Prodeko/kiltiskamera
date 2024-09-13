@@ -34,6 +34,14 @@ function addOnlineToken(user: ProdekoUser): string {
   return token;
 }
 
+function removeOnlineToken(user: ProdekoUser): void {
+  for (const token in onlineTokens) {
+    if (onlineTokens[token].id === user.id) {
+      delete onlineTokens[token];
+      break;
+    }
+  }
+}
 function isTokenOnline(token: string): boolean {
   return !!onlineTokens[token];
 }
@@ -61,4 +69,10 @@ function removeExpiredTokens(): void {
 removeExpiredTokens();
 
 // Export relevant functions and interfaces
-export { ProdekoUser, addOnlineToken, isTokenOnline, getOnlineTokens };
+export {
+  ProdekoUser,
+  addOnlineToken,
+  removeOnlineToken,
+  isTokenOnline,
+  getOnlineTokens,
+};
