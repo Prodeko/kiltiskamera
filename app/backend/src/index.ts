@@ -19,6 +19,7 @@ import {
   PORT,
   SESSION_SECRET,
   VIEWER_TOKEN_DESTROY_DELAY,
+  ON_AIR_PASSWORD,
 } from "./configuration";
 
 // Setup express app and middlewares
@@ -30,6 +31,30 @@ const sessionParser = session({
   secret: SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
+});
+
+app.get("/on_air", (req: Request, res: Response) => {
+  // This endpoint returns whether someone is watching the stream
+
+  console.log("got viewer req");
+
+  // Get the password from the query params
+  const { password } = req.query;
+
+  // Replace this with your actual password
+  const correctPassword = ON_AIR_PASSWORD;
+
+  // Check if the password matches
+  if (password !== correctPassword) {
+    return res.status(401).json({
+      error: "Unauthorized: Incorrect password",
+    });
+  }
+
+  const tokens = getOnlineTokens();
+  res.json({
+    onAir: Object.keys(tokens).length > 0,
+  });
 });
 
 app.use(sessionParser);
@@ -98,17 +123,6 @@ app.get("/stream_url", ensureAuthenticated, (req: Request, res: Response) => {
   const m3u8StreamSource = `https://kiltis.prodeko.org/live/hls/${token}/stream.m3u8`;
 
   res.json({ url: m3u8StreamSource });
-});
-
-app.get("/viewers", ensureAuthenticated, (req: Request, res: Response) => {
-  // This endpoint returns the current viewers of the stream
-
-  console.log("got viewer req");
-
-  const tokens = getOnlineTokens();
-  res.json({
-    viewers: Object.keys(tokens).map((token) => tokens[token].displayName),
-  });
 });
 
 // Lower level section

@@ -8,6 +8,9 @@ export const VIEWER_TOKEN_DESTROY_DELAY = 30 * 1000; // 30 seconds in millisecon
 export const CHAT_MESSAGE_TTL = 1 * 60 * 1000; // 1 minute
 export const CHAT_MAX_MESSAGES = 50;
 
+// Analytics access restriction
+export const ON_AIR_PASSWORD = process.env.ON_AIR_PASSWORD || "";
+
 // Prodeko.org Oauth2 parameters
 export const OAUTH2_CLIENT_ID = process.env.OAUTH2_CLIENT_ID || "";
 export const OAUTH2_CLIENT_SECRET = process.env.OAUTH2_CLIENT_SECRET || "";
