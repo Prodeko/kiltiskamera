@@ -1,4 +1,5 @@
 import express = require("express");
+import cors = require("cors");
 import { Express, Request, Response } from "express";
 import http = require("http");
 import WebSocket = require("ws");
@@ -25,6 +26,7 @@ import {
 // Setup express app and middlewares
 const app: Express = express();
 app.use(express.json());
+app.use(cors());
 
 app.use(cookieParser());
 const sessionParser = session({
