@@ -7,19 +7,20 @@ services:
     command: >
        -i /dev/video0
        -vf "vflip,hflip"
-       -profile:v baseline -pix_fmt yuvj420p -level:v 4.1 -preset ultrafast
+       -profile:v baseline -pix_fmt yuv420p -level:v 4.1 -preset ultrafast
        -c:v libx264
        -x264-params keyint=20:min-keyint=20
        -http_persistent 0
-       -g 10
+       -g 60
        -sc_threshold 0
        -f hls
        -b:v 2000k
        -s 1920x1080
        -r 30
+       -an
        -hls_init_time 0
-       -hls_time 1
-       -hls_segment_type fmp4
+       -hls_time 3
+       -hls_segment_type mpegts
        -hls_list_size 5
        -hls_delete_threshold 1
        -hls_flags delete_segments
@@ -47,3 +48,4 @@ services:
       - "443:443"
     volumes:
       - ./caddy/Caddyfile:/etc/caddy/Caddyfile
+      
