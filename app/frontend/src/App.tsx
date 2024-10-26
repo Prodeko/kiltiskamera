@@ -20,6 +20,7 @@ const App = () => {
 
           if (videoEl.current) {
             const videoCurrent = videoEl.current;
+
             if (Hls.isSupported()) {
               // For other browsers, use Hls.js
               newHls = new Hls({ liveDurationInfinity: true });
