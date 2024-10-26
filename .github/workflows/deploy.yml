@@ -6,6 +6,7 @@ on:
       - placeholder
       - android-fix-wip
       - main
+      - ci-fix
   workflow_dispatch:
 
 permissions:
