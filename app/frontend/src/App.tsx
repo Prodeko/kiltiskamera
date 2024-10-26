@@ -27,6 +27,8 @@ const App = () => {
               newHls.attachMedia(videoCurrent);
               newHls.on(Hls.Events.MEDIA_ATTACHED, () => {
                 newHls.loadSource(url);
+                videoCurrent.muted = true;
+                videoCurrent.play();
               });
             } else if (
               videoCurrent.canPlayType("application/vnd.apple.mpegurl") ===
