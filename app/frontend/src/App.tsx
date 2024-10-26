@@ -20,7 +20,14 @@ const App = () => {
 
           if (videoEl.current) {
             const videoCurrent = videoEl.current;
-            if (
+            if (Hls.isSupported()) {
+              // For other browsers, use Hls.js
+              newHls = new Hls({ liveDurationInfinity: true });
+              newHls.attachMedia(videoCurrent);
+              newHls.on(Hls.Events.MEDIA_ATTACHED, () => {
+                newHls.loadSource(url);
+              });
+            } else if (
               videoCurrent.canPlayType("application/vnd.apple.mpegurl") ===
               "maybe" // This result type is ridiculous
             ) {
@@ -28,13 +35,6 @@ const App = () => {
               videoCurrent.src = url;
               videoCurrent.addEventListener("loadedmetadata", function () {
                 videoCurrent.play();
-              });
-            } else if (Hls.isSupported()) {
-              // For other browsers, use Hls.js
-              newHls = new Hls({ liveDurationInfinity: true });
-              newHls.attachMedia(videoCurrent);
-              newHls.on(Hls.Events.MEDIA_ATTACHED, () => {
-                newHls.loadSource(url);
               });
             } else {
               console.error("HLS not supported on this browser");
