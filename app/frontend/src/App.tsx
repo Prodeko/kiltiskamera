@@ -21,8 +21,8 @@ const App = () => {
           if (videoEl.current) {
             const videoCurrent = videoEl.current;
             if (
-              videoCurrent.canPlayType("application/vnd.apple.mpegurl")
-                === "probably" // This result type is ridiculous
+              videoCurrent.canPlayType("application/vnd.apple.mpegurl") ===
+              "maybe" // This result type is ridiculous
             ) {
               // HLS is natively supported in Safari
               videoCurrent.src = url;
@@ -64,6 +64,7 @@ const App = () => {
           ref={videoEl}
           muted
           autoPlay
+          loop
           playsInline
           onPlay={() => setVideoStatus(true)}
           onPause={() => console.log("Teremos")}
