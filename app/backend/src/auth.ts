@@ -27,7 +27,6 @@ passport.serializeUser((user, done) => {
 });
 
 passport.deserializeUser((user: ProdekoUser, done) => {
-  console.log(user);
   done(null, user);
 });
 
