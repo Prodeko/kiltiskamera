@@ -38,8 +38,6 @@ const sessionParser = session({
 app.get("/on_air", (req: Request, res: Response) => {
   // This endpoint returns whether someone is watching the stream
 
-  console.log("got viewer req");
-
   // Get the password from the query params
   const { password } = req.query;
 
@@ -96,9 +94,6 @@ app.get("/authenticate", (req: Request, res: Response) => {
       .json({ error: "Query param 'token' has to be of type string" })
       .status(400);
   } else {
-    console.log("got auth req");
-    console.log(token);
-
     if (isTokenOnline(token)) {
       res.send(200);
     } else {
@@ -118,11 +113,10 @@ app.get("/stream_url", ensureAuthenticated, (req: Request, res: Response) => {
   // This endpoint will be called from frontend
   res.set("Access-Control-Allow-Origin", "*"); // TODO cleanup
   const user = req.user as ProdekoUser;
-  console.log("stream user", req.user);
   const token = addOnlineToken(user);
 
-  console.log("got stream url name");
   const m3u8StreamSource = `https://kiltis.prodeko.org/live/hls/${token}/stream.m3u8`;
+  console.log(`Client ${user.displayName} retrieved the stream URL.`);
 
   res.json({ url: m3u8StreamSource });
 });
@@ -172,7 +166,6 @@ http_server.on("upgrade", (request, socket, head) => {
       return;
     } else {
       const wsUser = sessionRequest.session.passport.user;
-      console.log("WebSocket upgrade");
       ws_server.handleUpgrade(request, socket, head, (ws) => {
         ws_server.emit("connection", ws, wsUser);
       });
