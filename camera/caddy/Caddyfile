@@ -1,13 +1,6 @@
+:80
 {
-    # Global options block. Entirely optional, https is on by default
-    # Optional email key for lets encrypt
-    email cto@prodeko.org
-    acme_ca https://acme.zerossl.com/v2/DV90
-}
-www.kiltis.prodeko.org {
-    redir https://kiltis.prodeko.org{uri} permanent
-}
-kiltis.prodeko.org {
-    tls cto@prodeko.org
     reverse_proxy nginx:4000
+
+    tls internal
 }
