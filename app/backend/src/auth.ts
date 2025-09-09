@@ -38,6 +38,8 @@ passport.use(
       clientID: OAUTH2_CLIENT_ID,
       clientSecret: OAUTH2_CLIENT_SECRET,
       callbackURL: OAUTH2_CALLBACK_URL,
+      state: true,
+      pkce: true,
       // eslint-disable-next-line @typescript-eslint/ban-types
     },
     (
