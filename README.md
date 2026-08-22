@@ -4,8 +4,8 @@ sequenceDiagram
     actor User
     User->>Frontend: enter site
     Frontend->>Backend: 
-    Backend->>Prodeko Oauth: request auth
-    Prodeko Oauth->>Backend: Return user details
+    Backend->>Keycloak: request auth
+    Keycloak->>Backend: Return user details
     Backend->>Frontend: Return stream link with token
     Frontend-->>Backend: Open chat websocket
     Frontend->>Camera nginx: Request stream link with token

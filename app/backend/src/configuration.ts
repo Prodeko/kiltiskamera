@@ -11,13 +11,16 @@ export const CHAT_MAX_MESSAGES = 50;
 // Analytics access restriction
 export const ON_AIR_PASSWORD = process.env.ON_AIR_PASSWORD || "";
 
-// Prodeko.org Oauth2 parameters
-export const OAUTH2_CLIENT_ID = process.env.OAUTH2_CLIENT_ID || "";
-export const OAUTH2_CLIENT_SECRET = process.env.OAUTH2_CLIENT_SECRET || "";
-export const OAUTH2_CALLBACK_URL = process.env.OAUTH2_CALLBACK_URL || "";
-export const OAUTH2_AUTH_URL = process.env.OAUTH2_AUTH_URL || "";
-export const OAUTH2_TOKEN_URL = process.env.OAUTH2_TOKEN_URL || "";
-export const OAUTH2_PROFILE_URL = process.env.OAUTH2_PROFILE_URL || "";
+// Keycloak OpenID Connect parameters. The issuer must not end with a slash;
+// every endpoint is read from its discovery document at startup.
+export const KEYCLOAK_ISSUER = process.env.KEYCLOAK_ISSUER || "";
+export const KEYCLOAK_CLIENT_ID = process.env.KEYCLOAK_CLIENT_ID || "";
+export const KEYCLOAK_CLIENT_SECRET = process.env.KEYCLOAK_CLIENT_SECRET || "";
+export const KEYCLOAK_CALLBACK_URL = process.env.KEYCLOAK_CALLBACK_URL || "";
+
+// The realm role a member must hold to watch the stream. Keycloak is the sole
+// authority on this: the realm also contains people who are not members.
+export const KEYCLOAK_REQUIRED_ROLE = "membership";
 
 // Session storing properties
 export const SESSION_SECRET = process.env.SESSION_SECRET || "";
