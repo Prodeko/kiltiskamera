@@ -18,7 +18,9 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-    environment: Production
+    # Casing is load-bearing: it lands verbatim in the OIDC subject claim that
+    # Entra matches case-sensitively against the CiToProduction credential.
+    environment: production
     steps:
       - uses: actions/checkout@v2
 
