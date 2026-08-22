@@ -7,7 +7,7 @@ import passport = require("passport");
 import path = require("path");
 import session = require("express-session");
 import cookieParser = require("cookie-parser");
-import { ensureAuthenticated } from "./auth";
+import { ensureAuthenticated, initAuth, STRATEGY_NAME } from "./auth";
 import { handleConnect, handleWsMessage } from "./websocket";
 import {
   isTokenOnline,
@@ -63,10 +63,10 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Authentication routes
-app.get("/auth/prodeko", passport.authenticate("oauth2"));
+app.get(`/auth/${STRATEGY_NAME}`, passport.authenticate(STRATEGY_NAME));
 app.get(
-  "/auth/prodeko/callback",
-  passport.authenticate("oauth2", {
+  `/auth/${STRATEGY_NAME}/callback`,
+  passport.authenticate(STRATEGY_NAME, {
     successRedirect: "/",
     failureRedirect: "/login",
   })
@@ -77,7 +77,8 @@ app.get("/login", (req, res) => {
   res.send(`
     <html>
       <body>
-        <a href="/auth/prodeko">Sign in with Prodeko</a>
+        <a href="/auth/${STRATEGY_NAME}">Sign in with Prodeko</a>
+        <p>Watching the stream requires a valid Prodeko membership.</p>
       </body>
     </html>
   `);
@@ -175,8 +176,18 @@ http_server.on("upgrade", (request, socket, head) => {
 
 // Send all rest HTTP traffic to Express
 http_server.on("request", app);
-http_server.listen(PORT, "0.0.0.0", function () {
-  console.log(
-    `⚡️[server]: Kiltiskamera server is running at http://localhost:${PORT}`
-  );
-});
+
+// Keycloak discovery is a network call, so the server only starts listening
+// once the strategy is registered. Without it every route would 500.
+initAuth()
+  .then(() => {
+    http_server.listen(PORT, "0.0.0.0", function () {
+      console.log(
+        `⚡️[server]: Kiltiskamera server is running at http://localhost:${PORT}`
+      );
+    });
+  })
+  .catch((error) => {
+    console.error("Failed to configure Keycloak authentication:", error);
+    process.exit(1);
+  });

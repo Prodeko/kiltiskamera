@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "ts-node-dev src/index.ts",
     "lint": "eslint . --ext .ts",
-    "build": "tsc src/index.ts",
+    "build": "tsc -p .",
     "start": "node src/index.js"
   },
   "author": "",
@@ -16,16 +16,13 @@
     "@types/cookie-parser": "^1.4.6",
     "@types/express-session": "^1.17.10",
     "@types/passport": "^1.0.16",
-    "@types/passport-oauth2": "^1.4.15",
-    "@types/request": "^2.48.12",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "express-session": "^1.17.3",
+    "openid-client": "^5.7.1",
     "passport": "^0.7.0",
-    "passport-oauth2": "^1.7.0",
-    "request": "^2.88.2",
     "ws": "^8.12.1"
   },
   "devDependencies": {
