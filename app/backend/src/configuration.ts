@@ -8,6 +8,10 @@ export const VIEWER_TOKEN_DESTROY_DELAY = 30 * 1000; // 30 seconds in millisecon
 export const CHAT_MESSAGE_TTL = 1 * 60 * 1000; // 1 minute
 export const CHAT_MAX_MESSAGES = 50;
 
+// Where the camera serves the stream (Caddy in camera/caddy/Caddyfile)
+export const STREAM_BASE_URL =
+  process.env.STREAM_BASE_URL || "https://kiltis.prodeko.org";
+
 // Analytics access restriction
 export const ON_AIR_PASSWORD = process.env.ON_AIR_PASSWORD || "";
 

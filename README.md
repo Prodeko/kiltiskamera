@@ -8,11 +8,11 @@ sequenceDiagram
     Keycloak->>Backend: Return user details
     Backend->>Frontend: Return stream link with token
     Frontend-->>Backend: Open chat websocket
-    Frontend->>Camera nginx: Request stream link with token
-    loop every period of nginx setting proxy_cache_valid (30 s)
-        Camera nginx->>Backend: Verify token validity
+    Frontend->>Camera MediaMTX: Open WebRTC (WHEP) stream with token, LL-HLS as fallback
+    loop on WebRTC connect / every LL-HLS request
+        Camera MediaMTX->>Backend: Verify token validity
     end
-    Camera nginx<<->>Frontend: Stream the camera feed
+    Camera MediaMTX<<->>Frontend: Stream the camera feed
     loop every period of VIEWER_TOKEN_VALIDITY_TTL (5 min)
         Backend->>Backend: Invalidate token
     end

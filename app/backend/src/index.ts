@@ -21,6 +21,7 @@ import {
   SESSION_SECRET,
   VIEWER_TOKEN_DESTROY_DELAY,
   ON_AIR_PASSWORD,
+  STREAM_BASE_URL,
 } from "./configuration";
 
 // Setup express app and middlewares
@@ -103,6 +104,21 @@ app.get("/authenticate", (req: Request, res: Response) => {
   }
 });
 
+app.post("/authenticate", (req: Request, res: Response) => {
+  // This endpoint is called by MediaMTX for every viewer request.
+  // The body is described in camera/mediamtx.yml; the token is in its query.
+  const { action, query } = req.body ?? {};
+  const token = new URLSearchParams(
+    typeof query === "string" ? query : ""
+  ).get("token");
+
+  if (action === "read" && token && isTokenOnline(token)) {
+    res.sendStatus(200);
+  } else {
+    res.sendStatus(401);
+  }
+});
+
 // All frontend routes
 app.use(
   ensureAuthenticated,
@@ -116,10 +132,11 @@ app.get("/stream_url", ensureAuthenticated, (req: Request, res: Response) => {
   const user = req.user as ProdekoUser;
   const token = addOnlineToken(user);
 
-  const m3u8StreamSource = `https://kiltis.prodeko.org/live/hls/${token}/stream.m3u8`;
+  const m3u8StreamSource = `${STREAM_BASE_URL}/live/hls/${token}/index.m3u8`;
+  const whepStreamSource = `${STREAM_BASE_URL}/live/webrtc/${token}/whep`;
   console.log(`Client ${user.displayName} retrieved the stream URL.`);
 
-  res.json({ url: m3u8StreamSource });
+  res.json({ url: m3u8StreamSource, whepUrl: whepStreamSource });
 });
 
 // Lower level section

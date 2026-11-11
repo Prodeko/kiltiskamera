@@ -1,6 +1,18 @@
-:80
-{
-    reverse_proxy nginx:4000
+:80 {
+	# /live/hls/<token>/<file> -> MediaMTX /cam/<file>?token=<token>
+	# Keeping the token in the path means the playlist's relative URLs carry it too.
+	@hls path_regexp hls ^/live/hls/([^/]+)/(.*)$
+	handle @hls {
+		rewrite * /cam/{re.hls.2}?token={re.hls.1}
+		reverse_proxy mediamtx:8888
+	}
 
-    tls internal
+	# /live/webrtc/<token>/whep -> MediaMTX /cam/whep?token=<token>
+	@webrtc path_regexp webrtc ^/live/webrtc/([^/]+)/(.*)$
+	handle @webrtc {
+		rewrite * /cam/{re.webrtc.2}?token={re.webrtc.1}
+		reverse_proxy mediamtx:8889
+	}
+
+	respond 404
 }
