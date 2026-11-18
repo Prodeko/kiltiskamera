@@ -58,6 +58,14 @@ Environment variables — `.env` locally, application settings in Azure:
 | `SESSION_SECRET`         | Signs the session cookie                      |
 | `ON_AIR_PASSWORD`        | Guards the unauthenticated `/on_air` endpoint |
 
+## `/on_air`
+
+`GET /on_air?password=<ON_AIR_PASSWORD>` returns
+`{"onAir": <bool>, "viewers": <number>}`. `onAir` is true while any stream token
+exists; `viewers` counts the tokens still within `VIEWER_TOKEN_VALIDITY_TTL`.
+Tokens are only issued to kiltiskamera viewers, so portal (`/feed/hls/`) viewers
+are not counted.
+
 ## Local development
 
 Run Keycloak from the membership-registry repo (`docker compose up -d keycloak`,

@@ -15,6 +15,7 @@ import {
   addOnlineToken,
   removeOnlineToken,
   getOnlineTokens,
+  countValidTokens,
 } from "./tokens";
 import {
   PORT,
@@ -54,6 +55,7 @@ app.get("/on_air", (req: Request, res: Response) => {
   const tokens = getOnlineTokens();
   res.json({
     onAir: Object.keys(tokens).length > 0,
+    viewers: countValidTokens(),
   });
 });
 
