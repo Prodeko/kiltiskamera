@@ -50,6 +50,19 @@ function getOnlineTokens() {
   return onlineTokens;
 }
 
+// Tokens within their validity TTL. The periodic cleanup below only runs once
+// per TTL, so expired tokens can still be in the map for a while.
+function countValidTokens(): number {
+  const currentTime = Date.now();
+  let count = 0;
+  Object.keys(onlineTokens).forEach((token) => {
+    if (currentTime - onlineTokens[token].timestamp <= VIEWER_TOKEN_VALIDITY_TTL) {
+      count += 1;
+    }
+  });
+  return count;
+}
+
 function removeExpiredTokens(): void {
   const currentTime = Date.now();
   const expirationTime = VIEWER_TOKEN_VALIDITY_TTL;
@@ -75,4 +88,5 @@ export {
   removeOnlineToken,
   isTokenOnline,
   getOnlineTokens,
+  countValidTokens,
 };
